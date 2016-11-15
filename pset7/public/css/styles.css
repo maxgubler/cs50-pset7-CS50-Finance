@@ -37,6 +37,13 @@
     width: auto;
 }
 
+/* added */
+#middle td
+{
+    /* left-align tables' cells */
+    text-align: left;
+}
+
 #bottom
 {
     /* shrink bottom's font size */
@@ -44,4 +51,11 @@
 
     /* surround with whitespace */
     margin: 20px;
+}
+
+/* added */
+#changepass label
+{
+    width: 170px;
+    text-align: right;
 }
