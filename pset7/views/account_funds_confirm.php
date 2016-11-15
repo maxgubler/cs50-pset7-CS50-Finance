@@ -1,0 +1,1 @@
+<p>Success! <strong>$<?=$funds?></strong> has been added to your account.</p>

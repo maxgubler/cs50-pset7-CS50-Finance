@@ -1,0 +1,16 @@
+http://stackoverflow.com/questions/308122/simple-regular-expression-for-a-decimal-with-a-precision-of-2
+
+^[0-9]+(\.[0-9]{1,2})?$
+
+And since regular expressions are horrible to read, much less understand, here is the verbose equivalent:
+
+^                   # Start of string.
+[0-9]+              # Must have one or more numbers.
+(                   # Begin optional group.
+    \.              # The decimal point, . must be escaped, 
+                    # or it is treated as "any character".
+    [0-9]{1,2}      # One or two numbers.
+)?                  # End group, signify it's optional with ?
+$                   # End of string.
+
+You can replace [0-9] with \d in most regular expression implementations (including PCRE, the most common). I've left it as [0-9] as I think it's easier to read.

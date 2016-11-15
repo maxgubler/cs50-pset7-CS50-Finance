@@ -155,5 +155,85 @@
             trigger_error("Invalid view: {$view}", E_USER_ERROR);
         }
     }
+    
+    
+    /**
+     * Used in render_multi() to check if all view files exist
+     */
+    function view_check($views = [])
+    {
+        foreach($views as $view)
+        {
+            if (file_exists("../views/{$view}"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+                exit;
+            }
+        }
+    }
+    
+    /**
+     * Renders view, passing in values.
+     */
+    function render_multi($views = [], $values = [])
+    {
+        
+        // if view exists, render it
+        if (view_check($views))
+        {
+            // extract variables into local scope
+            extract($values);
+
+            // render view (between header and footer)
+            require("../views/header.php");
+            foreach($views as $view)
+            {
+                require("../views/{$view}");
+                echo("<br />");
+            }
+            require("../views/footer.php");
+            exit;
+        }
+
+        // else err
+        else
+        {
+            trigger_error("Invalid view", E_USER_ERROR);
+        }
+    }
+    
+    /**
+     * Returns $positions array and $cash value for use outside of index
+     */
+    function return_poscash()
+    {
+        // read portfolio data into $rows
+        $rows = CS50::query("SELECT * FROM `portfolios` WHERE `user_id` = ?", $_SESSION["id"]);
+        // read cash from user data into $cash (which is returned as an array, 0 = > "cash")
+        $cash = CS50::query("SELECT `cash` FROM `users` WHERE `id` = ?", $_SESSION["id"]);
+    
+        // define positions by iterating over each row the user has in the portfolios table
+        $positions = [];
+        foreach ($rows as $row)
+        {
+            $stock = lookup($row["symbol"]);
+            if ($stock !== false)
+            {
+                $positions[] = [
+                    "name" => $stock["name"],
+                    "price" => $stock["price"],
+                    "shares" => $row["shares"],
+                    "symbol" => $row["symbol"]
+                ];
+            }
+        }
+
+        $poscash = ["positions" => $positions, "cash" => $cash[0]["cash"]];
+        return $poscash;
+    }
 
 ?>
